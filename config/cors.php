@@ -1,5 +1,6 @@
 <?php
 
+return [
 
     /*
     |--------------------------------------------------------------------------
@@ -10,26 +11,31 @@
     | or "CORS". This determines what cross-origin operations may execute
     | in web browsers. You are free to adjust these settings as needed.
     |
-    | To learn more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-    |
     */
 
-    return [
+    'paths' => [
+        'api/*',
+        'login',
+        'logout',
+        'register',
+        'sanctum/csrf-cookie',
+    ],
 
-        'paths' => ['api/*', 'login', 'logout', 'sanctum/csrf-cookie'],
-    
-        'allowed_methods' => ['*'],
-    
-        'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:3000')],
-    
-        'allowed_origins_patterns' => [],
-    
-        'allowed_headers' => ['*'],
-    
-        'exposed_headers' => [],
-    
-        'max_age' => 0,
-    
-        'supports_credentials' => true,
-    
+    'allowed_methods' => ['*'],
+
+    'allowed_origins' => [
+        'http://localhost:5174',
+        'http://127.0.0.1:5174',
+    ],
+
+    'allowed_origins_patterns' => [],
+
+    'allowed_headers' => ['*'],
+
+    'exposed_headers' => [],
+
+    'max_age' => 0,
+
+    'supports_credentials' => true,
+
 ];
