@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    /**
-     * Handle user registration and return a token.
-     */
     public function register(Request $request)
     {
         $validated = $request->validate([
@@ -28,15 +25,11 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
+            'token' => $token,
             'user' => $user,
         ]);
     }
 
-    /**
-     * Handle user login and return a token.
-     */
     public function login(Request $request)
     {
         $request->validate([
@@ -53,15 +46,11 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
+            'token' => $token,
             'user' => $user,
         ]);
     }
 
-    /**
-     * Logout user by revoking their current token.
-     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();

@@ -12,12 +12,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // ✅ Removed EnsureFrontendRequestsAreStateful for token-based auth
-        // ✅ No CSRF middleware added for API
+        // ✅ Minimal middleware for token-based auth (stateless)
         $middleware->alias([
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
-    })->create();
+        // Add custom exception handling here if needed
+    })
+    ->create();
