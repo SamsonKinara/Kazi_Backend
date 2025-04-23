@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use App\Models\User;
 
 class AuthController extends Controller
 {
     /**
-     * Handle user registration.
+     * Handle user registration and return a custom token.
      */
     public function register(Request $request)
     {
@@ -23,19 +24,18 @@ class AuthController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => bcrypt($validated['password']),
+            'token' => Str::random(60),
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-
         return response()->json([
-            'access_token' => $token,
+            'access_token' => $user->token,
             'token_type' => 'Bearer',
             'user' => $user,
         ]);
     }
 
     /**
-     * Handle user login and return token.
+     * Handle user login and return a custom token.
      */
     public function login(Request $request)
     {
@@ -50,22 +50,37 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        // Generate a new token
+        $user->token = Str::random(60);
+        $user->save();
 
         return response()->json([
-            'access_token' => $token,
+            'access_token' => $user->token,
             'token_type' => 'Bearer',
             'user' => $user,
         ]);
     }
 
     /**
-     * Logout the authenticated user.
+     * Handle logout by deleting the user's current token.
      */
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $user = $request->user();
+
+        if ($user) {
+            $user->token = null;
+            $user->save();
+        }
 
         return response()->json(['message' => 'Logged out']);
+    }
+
+    /**
+     * Return the authenticated user's data.
+     */
+    public function user(Request $request)
+    {
+        return response()->json($request->user());
     }
 }

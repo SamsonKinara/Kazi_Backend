@@ -17,3 +17,6 @@ Route::post('/users/{id}', [AuthenticatedSessionController::class, 'store']);
 Route::put('/users/{id}', [AuthenticatedSessionController::class, 'update']);
 Route::delete('/users/{id}', [AuthenticatedSessionController::class, 'destroy']);
 //Route to get all users
+Route::post('/login', [AuthController::class, 'login']);
+Route::middleware('auth.token')->get('/user', [AuthController::class, 'user']);
+
